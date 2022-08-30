@@ -11,6 +11,11 @@ const add = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
+    const existedProduct = await products.findOne({productName:data.productName })
+    if(existedProduct){
+      return res.status(400).json({message:"product already exist"})
+    }
+    // const existedProduct =  await product.findOne({productName:data.productName})
     let product = new products(data);
     console.log(product);
     await product.save();
