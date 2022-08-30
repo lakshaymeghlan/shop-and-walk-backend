@@ -1,19 +1,20 @@
 import express from "express";
 import _ from "lodash";
-import {
-  products_details,
-  add_product,
-  get_product,
-  deleteProduct,
-  updateProduct,
-} from "../Controllers/productController";
+// import {
+//   add_product,
+//   get_product,
+//   deleteProduct,
+//   updateProduct,
+// } from "../Controllers/productController";
+
+import productCtrl from "../Controllers/productController";
 
 const router = express.Router();
 
-router.post("/saveProduct", products_details);
-router.post("/add", add_product);
-router.get("/getProduct", get_product);
-router.delete("/delete/:id", deleteProduct);
-router.patch("/updateProduct/:id",updateProduct);
+
+router.post("/add", productCtrl.add);
+router.get("/get", productCtrl.get);
+router.delete("/delete/:id", productCtrl.deleteProduct);
+router.patch("/update/:id",productCtrl.update);
 
 export default router;

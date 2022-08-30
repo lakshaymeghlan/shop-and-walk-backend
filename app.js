@@ -47,16 +47,4 @@ app.listen(PORT, () => {
 
 
 
-/*  products
-    add product, delete product, *get products, update products
-
-    wishlist
-    add ,delete and get - frontend
-
-    cart
-    add ,delete and get - frontend
-
-  login/signup
-
-*/
 

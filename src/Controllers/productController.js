@@ -4,72 +4,102 @@ import _ from "lodash";
 const router = express.Router();
 import responseObjectClass from "../helper/responseObjectClass";
 
-const responseObject = new responseObjectClass();
+const ResponseObject = new responseObjectClass();
 
-export const products_details = async (req, res) => {
+//add
+const add = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
-    const product = new product(data);
-    await product.save();
-    let returnObject = responseObject({
-      codes: "",
-      success: true,
-      message: "product fetched successfully",
-      data,
-    });
-    res.status(returnObject);
-  } catch (error) {
-    res.status(500).json({ message: "product not Saved", data: error });
-  }
-};
-
-//add
-export const add_product = async (req, res) => {
-  try {
-    let product = new products(req.body);
+    let product = new products(data);
     console.log(product);
-    let result = await product.save();
-    let returnObject = responseObject({
-      codes: "",
+    await product.save();
+    let returnObject = ResponseObject.create({
+      code: 200,
       success: true,
-      message: "product fetched successfully",
-      data,
+      message: "product added successfully",
+      data: product,
     });
-    res.status(returnObject);
+    res.send(returnObject);
   } catch (error) {
-    res.status(500,"false").json({ message: "product not added ", data: error });
+    console.log(error);
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "product not added",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
 //get
 
-export const get_product = async (req, res) => {
+const get = async (req, res) => {
   const getProduct = await products.find();
-  res.status(200,"true").json({ message: "product", data: getProduct });
-  // if (getProduct){
-  //     res.send(getProduct)
-  // }else{
-  //     res.send({getProduct:"no result found"})
-  // }
+  let returnObject = ResponseObject.create({
+    code: 200,
+    success: true,
+    message: "product ",
+    data: getProduct,
+  });
+  res.send(returnObject);
 };
 
+const getProduct = async(req,res) =>{
+  try {
+    const id = req.params.id
+    const product = await product.findById(id)
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "product ",
+      data: product,
+    });
+    res.send(returnObject);
+
+  } catch (error) {
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: true,
+      message: "product ",
+      data: error,
+    });
+    res.send(returnObject);
+    
+  }
+}
+
 // delete
-export const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     const deleteProduct = await products.findByIdAndDelete(req.params.id);
     if (!req.params.id) {
-      res.status(200,"true").send(results[0].id.toString());
+      res.status(200, "true").send(results[0].id.toString());
     }
-    res.json({ message: "product deleted", data: deleteProduct });
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "product is deleted ",
+      data: deleteProduct,
+    });
+    res.send(returnObject);
   } catch (error) {
-    res.Status(400,"false").json({ message: "product not deleted", data: error });
+    res;
+
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: true,
+      message: "product you are looking for is not found ",
+      data: deleteProduct,
+    });
+    res.send(returnObject);
   }
 };
 
 //update
 
-export const updateProduct = async (req, res) => {
+const update = async (req, res) => {
   const newdata = req.body;
   try {
     const updateProduct = await products.findByIdAndUpdate(
@@ -77,13 +107,22 @@ export const updateProduct = async (req, res) => {
       { $set: newdata },
       { new: true }
     );
-    res.status(200,"true").json({message:"product is updated",data:updateProduct});
-    if (!updateProduct)
-      return res.status(404,"false").send("product you are looking for is not found");
-    res.send(updateProduct);
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "product is updated ",
+      data: updateProduct,
+    });
+    res.send(returnObject);
   } catch (error) {
-    res.status(400,"false").json({message:"product is not updated",data:error});
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: true,
+      message: "product not found ",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
-export default router;
+export default { add, deleteProduct, get, update };
