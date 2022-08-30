@@ -49,11 +49,12 @@ const get = async (req, res) => {
 const getProduct = async(req,res) =>{
   try {
     const id = req.params.id
-    const product = await product.findById(id)
+    const product = await products.findById(id)
+
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
-      message: "product ",
+      message: "product id ",
       data: product,
     });
     res.send(returnObject);
@@ -62,7 +63,7 @@ const getProduct = async(req,res) =>{
     let returnObject = ResponseObject.create({
       code: 400,
       success: true,
-      message: "product ",
+      message: "product not found ",
       data: error,
     });
     res.send(returnObject);
@@ -125,4 +126,4 @@ const update = async (req, res) => {
   }
 };
 
-export default { add, deleteProduct, get, update };
+export default { add, deleteProduct, get,getProduct, update };
