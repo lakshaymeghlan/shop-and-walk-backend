@@ -2,11 +2,14 @@ import Wishlist from "../Schema/Wishlist";
 import _ from "lodash";
 // var Joi = require('joi')
 // import Joi from "joi";
+import responseObjectClass from "../helper/responseObjectClass";
+
+const ResponseObject = new responseObjectClass();
 
 
 
 //create
-export const createWishlist = async (req, res) => {
+ const createWishlist = async (req, res) => {
   const data = req.body;
   console.log(data);
   try {
@@ -16,30 +19,66 @@ export const createWishlist = async (req, res) => {
       // userID: data.userId,
     });
     await wishlist.save();
-    res.status(200).json({ message: "wishlist created", data: wishlist });
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "wishlist  is created",
+      data: wishlist,
+    });
+    res.send(returnObject);
+    
   } catch (error) {
-    res.status(500).json({ message: "wishlist not created", data: error });
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: " wishlist not created ",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
 //delete wishlist
 
-export const deleteWishlist = async (req, res) => {
+const deleteWishlist = async (req, res) => {
   try {
     const deleteProduct = await Wishlist.findByIdAndDelete(req.params.id);
     if (!req.params.id) {
       res.status(200).send(results[0].id.toString());
     }
     // res.send(deleteProduct);
-    res.json({ message: "wishlist item deleted", data: deleteProduct });
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "wishlist item deleted",
+      data: deleteProduct,
+    });
+    res.send(returnObject);
   } catch (error) {
-    res.Status(400).json({ message: "item not deleted", data: error });
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "item not deleted ",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
 // get
+const allWishlistProduct = async (req, res) => {
+  const getProduct = await products.find();
+  let returnObject = ResponseObject.create({
+    code: 200,
+    success: true,
+    message: "product ",
+    data: getProduct,
+  });
+  res.send(returnObject);
+};
 
-export const getWishlist = async (req, res) => {
+
+const getWishlist = async (req, res) => {
   const { id: userId } = req.params;
   try {
     const getProduct = await Wishlist.find();
@@ -49,9 +88,21 @@ export const getWishlist = async (req, res) => {
     console.log(WishlistProduct);
     console.log(getProduct);
     if (getProduct) {
-      res.json({ message: "wishlist item ", data: getProduct });
+      let returnObject = ResponseObject.create({
+        code: 200,
+        success: true,
+        message: " wishlist item ",
+        data: getProduct,
+      });
+      res.send(returnObject);
     } else {
-      res.send({ getProduct: "no result found" });
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: false,
+        message: " no result found",
+        data: error,
+      });
+      res.send(returnObject);
     }
   } catch (error) {
     console.log(error);
@@ -66,3 +117,5 @@ export const getWishlist = async (req, res) => {
 //     console.log(error);
 //   }
 // });
+
+export default { createWishlist, deleteWishlist, allWishlistProduct,getWishlist };

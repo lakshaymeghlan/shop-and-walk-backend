@@ -1,10 +1,11 @@
 import express from "express";
 import Cart from "../Schema/CartDetails";
 import _ from "lodash";
+import responseObjectClass from "../helper/responseObjectClass";
 
-const router = express.Router();
+const ResponseObject = new responseObjectClass();
 
-export const addToCart = async (req, res) => {
+const addToCart = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
@@ -12,45 +13,77 @@ export const addToCart = async (req, res) => {
       productName: data.productName,
       productPrice: data.productPrice,
       // userID: data.userId,
-    })
+    });
 
     cart.save();
-    res.status(200).json({ message: "added to cart", data: cart });
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "added to cart ",
+      data: cart,
+    });
+    res.send(returnObject);
   } catch (error) {
-    res.status(500).json({ message: "not added to the cart", data: error });
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "not added to the cart ",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
 //delete cart
 
-export const deleteCart = async (req, res) => {
+const deleteCart = async (req, res) => {
   try {
     const deleteProduct = await Cart.findByIdAndDelete(req.params.id);
     if (!req.params.id) {
       res.status(200).send(results[0].id.toString());
     }
-    res
-      .status(200)
-      .json({ message: "item deleted from the cart", data: deleteProduct });
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "item deleted from the cart ",
+      data: deleteProduct,
+    });
+    res.send(returnObject);
   } catch (error) {
-    res
-      .Status(400)
-      .json({ message: "item not deleted from the cart", data: error });
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "item not deleted from the cart ",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
 //get
 
-export const AllCartProduct = async(req,res)=>{
-  try{
-      const getProduct = await Cart.find()
-      res.status(200).json({message:"all cart product",data:getProduct});
-  }catch(err){
-      res.status(500).json({message:"cart is empty",data:data})
+const AllCartProduct = async (req, res) => {
+  try {
+    const getProduct = await Cart.find();
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "all cart product",
+      data: getProduct,
+    });
+    res.send(returnObject);
+  } catch (err) {
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "cart is empty",
+      data: data,
+    });
+    res.send(returnObject);
   }
-}
+};
 
-export const cartProduct = async (req, res) => {
+const cartProduct = async (req, res) => {
   const { id: userId } = req.params;
   try {
     const getProduct = await Cart.find();
@@ -61,13 +94,25 @@ export const cartProduct = async (req, res) => {
     // console.log(CartProduct);
     // console.log(getProduct);
     if (getProduct) {
-      res.status(200).json({message:"product is in the cart",data:getProduct});
+      let returnObject = ResponseObject.create({
+        code: 200,
+        success: true,
+        message: "product is in the cart",
+        data: getProduct,
+      });
+      res.send(returnObject);
     }
     // } else {
     //   res.send({ getProduct: "no result found" });
     // }
   } catch (error) {
-    res.status(400).json({ message: "no result found", error });
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "no result found",
+      data: error,
+    });
+    res.send(returnObject);
   }
 };
 
@@ -90,4 +135,4 @@ export const cartProduct = async (req, res) => {
 //     }
 //   };
 
-export default router;
+export default { addToCart, deleteCart, AllCartProduct, cartProduct };

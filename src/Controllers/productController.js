@@ -11,9 +11,11 @@ const add = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
-    const existedProduct = await products.findOne({productName:data.productName })
-    if(existedProduct){
-      return res.status(400).json({message:"product already exist"})
+    const existedProduct = await products.findOne({
+      productName: data.productName,
+    });
+    if (existedProduct) {
+      return res.status(400).json({ message: "product already exist" });
     }
     // const existedProduct =  await product.findOne({productName:data.productName})
     let product = new products(data);
@@ -51,10 +53,10 @@ const get = async (req, res) => {
   res.send(returnObject);
 };
 
-const getProduct = async(req,res) =>{
+const getProduct = async (req, res) => {
   try {
-    const id = req.params.id
-    const product = await products.findById(id)
+    const id = req.params.id;
+    const product = await products.findById(id);
 
     let returnObject = ResponseObject.create({
       code: 200,
@@ -63,7 +65,6 @@ const getProduct = async(req,res) =>{
       data: product,
     });
     res.send(returnObject);
-
   } catch (error) {
     let returnObject = ResponseObject.create({
       code: 400,
@@ -72,9 +73,8 @@ const getProduct = async(req,res) =>{
       data: error,
     });
     res.send(returnObject);
-    
   }
-}
+};
 
 // delete
 const deleteProduct = async (req, res) => {
@@ -131,4 +131,4 @@ const update = async (req, res) => {
   }
 };
 
-export default { add, deleteProduct, get,getProduct, update };
+export default { add, deleteProduct, get, getProduct, update };
