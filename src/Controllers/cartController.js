@@ -14,7 +14,6 @@ const addToCart = async (req, res) => {
       productPrice: data.productPrice,
       // userID: data.userId,
     });
-
     cart.save();
     let returnObject = ResponseObject.create({
       code: 200,

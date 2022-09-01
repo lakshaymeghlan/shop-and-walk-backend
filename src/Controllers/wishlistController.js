@@ -67,16 +67,25 @@ const deleteWishlist = async (req, res) => {
 
 // get
 const allWishlistProduct = async (req, res) => {
-  const getProduct = await products.find();
-  let returnObject = ResponseObject.create({
-    code: 200,
-    success: true,
-    message: "product ",
-    data: getProduct,
-  });
-  res.send(returnObject);
+  try {
+    const getProduct = await Wishlist.find();
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "all wishlist product",
+      data: getProduct,
+    });
+    res.send(returnObject);
+  } catch (err) {
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "wishlist is empty",
+      data: data
+    });
+    res.send(returnObject);
+  }
 };
-
 
 const getWishlist = async (req, res) => {
   const { id: userId } = req.params;
