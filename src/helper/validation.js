@@ -19,9 +19,9 @@ import Joi from "joi";
   export const validationMiddleware = (req, res, next) => {
     console.log(req.body);
     const schema = Joi.object({
-      productId: Joi.string().required(),
-      productName: Joi.string().required(),
-      productPrice: Joi.string().required(),
+      productId: Joi.string(),
+      productName: Joi.string(),
+      productPrice: Joi.string(),
     }).unknown(true);
     const { error } = schema.validate(req.body, { aboutEarly: false });
     if (error) {

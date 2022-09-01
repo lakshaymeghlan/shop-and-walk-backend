@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import products from "../Schema/ProductDetail";
 import _ from "lodash";
 const router = express.Router();
@@ -43,14 +43,25 @@ const add = async (req, res) => {
 //get
 
 const get = async (req, res) => {
-  const getProduct = await products.find();
-  let returnObject = ResponseObject.create({
-    code: 200,
-    success: true,
-    message: "product ",
-    data: getProduct,
-  });
-  res.send(returnObject);
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const getProduct = await products
+      .find()
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+    let returnObject = ResponseObject.create({
+      code: 200,
+      success: true,
+      message: "product ",
+      data: getProduct,
+    });
+    res.send(returnObject);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: err,
+    });
+  }
 };
 
 const getProduct = async (req, res) => {
@@ -132,3 +143,5 @@ const update = async (req, res) => {
 };
 
 export default { add, deleteProduct, get, getProduct, update };
+
+
