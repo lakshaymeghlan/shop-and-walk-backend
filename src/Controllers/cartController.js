@@ -115,23 +115,5 @@ const cartProduct = async (req, res) => {
   }
 };
 
-//update
-
-// export const updateQuantity = async (req, res) => {
-//     const { id: _id } = req.params;
-//     const quantity = req.body;
-//     const number = parseInt(quantity.quantity);
-
-//     if (!mongoose.Types.ObjectId.isValid(_id)) {
-//       return res.status(404).send("product unavailable...");
-//     }
-
-//     try {
-//       await Cart.findByIdAndUpdate(_id, { $set: { quantity: number } });
-//       res.status(200).json({ message: "Successfully updated" });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
 
 export default { addToCart, deleteCart, AllCartProduct, cartProduct };
