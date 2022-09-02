@@ -7,5 +7,5 @@ const wishlistSchema = new mongoose.Schema({
   // userID: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 });
 
-const Wishlist = mongoose.model("wishlistDetail", wishlistSchema);
-export default Wishlist;
+export default mongoose.model("Wishlist", wishlistSchema);
+

@@ -1,7 +1,7 @@
-import express, { query } from "express";
+import express from "express";
 import products from "../Schema/ProductDetail";
 import _ from "lodash";
-const router = express.Router();
+// const router = express.Router();
 import responseObjectClass from "../helper/responseObjectClass";
 
 const ResponseObject = new responseObjectClass();
@@ -15,9 +15,13 @@ const add = async (req, res) => {
       productName: data.productName,
     });
     if (existedProduct) {
-      return res.status(400).json({ message: "product already exist" });
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: false,
+        message: "product already exist",
+      });
+      res.send(returnObject);
     }
-    // const existedProduct =  await product.findOne({productName:data.productName})
     let product = new products(data);
     console.log(product);
     await product.save();
@@ -44,7 +48,7 @@ const add = async (req, res) => {
 
 const get = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 5 } = req.query;
     const getProduct = await products
       .find()
       .limit(limit * 1)
@@ -106,7 +110,7 @@ const deleteProduct = async (req, res) => {
 
     let returnObject = ResponseObject.create({
       code: 400,
-      success: true,
+      success: false,
       message: "product you are looking for is not found ",
       data: deleteProduct,
     });
@@ -143,5 +147,3 @@ const update = async (req, res) => {
 };
 
 export default { add, deleteProduct, get, getProduct, update };
-
-

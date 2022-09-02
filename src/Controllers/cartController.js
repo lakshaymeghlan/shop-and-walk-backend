@@ -9,6 +9,18 @@ const addToCart = async (req, res) => {
   try {
     const data = req.body;
     console.log(data);
+    const existedProduct = await Cart.findOne({
+      productName: data.productName,
+    });
+    if (existedProduct) {
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: false,
+        message: "product already exist in cart",
+      });
+      res.send(returnObject);
+    }
+
     const cart = await Cart.create({
       productName: data.productName,
       productPrice: data.productPrice,
@@ -114,6 +126,5 @@ const cartProduct = async (req, res) => {
     res.send(returnObject);
   }
 };
-
 
 export default { addToCart, deleteCart, AllCartProduct, cartProduct };

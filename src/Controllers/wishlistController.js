@@ -6,13 +6,24 @@ import responseObjectClass from "../helper/responseObjectClass";
 
 const ResponseObject = new responseObjectClass();
 
-
-
 //create
- const createWishlist = async (req, res) => {
-  const data = req.body;
-  console.log(data);
+const createWishlist = async (req, res) => {
   try {
+    const data = req.body;
+    console.log(data);
+
+    const existedProduct = await Wishlist.findOne({
+      productName: data.productName,
+    });
+    if (existedProduct) {
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: false,
+        message: "product already exist in wishlist",
+      });
+      res.send(returnObject);
+    }
+
     const wishlist = await Wishlist.create({
       productName: data.productName,
       productPrice: data.productPrice,
@@ -26,7 +37,6 @@ const ResponseObject = new responseObjectClass();
       data: wishlist,
     });
     res.send(returnObject);
-    
   } catch (error) {
     let returnObject = ResponseObject.create({
       code: 400,
@@ -81,7 +91,7 @@ const allWishlistProduct = async (req, res) => {
       code: 400,
       success: false,
       message: "wishlist is empty",
-      data: data
+      data: data,
     });
     res.send(returnObject);
   }
@@ -127,4 +137,9 @@ const getWishlist = async (req, res) => {
 //   }
 // });
 
-export default { createWishlist, deleteWishlist, allWishlistProduct,getWishlist };
+export default {
+  createWishlist,
+  deleteWishlist,
+  allWishlistProduct,
+  getWishlist,
+};
