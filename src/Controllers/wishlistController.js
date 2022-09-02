@@ -1,4 +1,4 @@
-import Wishlist from "../Schema/Wishlist";
+import Wishlist from "../Schema/Wishlistdetails";
 import _ from "lodash";
 // var Joi = require('joi')
 // import Joi from "joi";
@@ -10,10 +10,11 @@ const ResponseObject = new responseObjectClass();
 const createWishlist = async (req, res) => {
   try {
     const data = req.body;
-    console.log(data);
+    // const data = JSON.stringify(incomingData);
+    console.log('incoming product'+(data));
 
     const existedProduct = await Wishlist.findOne({
-      productName: data.productName,
+      $and: [{productName:data.name}, {userId: data.userId} ]
     });
     if (existedProduct) {
       let returnObject = ResponseObject.create({
@@ -21,15 +22,16 @@ const createWishlist = async (req, res) => {
         success: false,
         message: "product already exist in wishlist",
       });
-      res.send(returnObject);
+      
+      return res.send(returnObject);
     }
 
     const wishlist = await Wishlist.create({
-      productName: data.productName,
-      productPrice: data.productPrice,
-      // userID: data.userId,
+      productName: data.name,
+      productPrice: data.price,
+      userID: data.userId,
     });
-    await wishlist.save();
+    wishlist.save();
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
@@ -38,6 +40,7 @@ const createWishlist = async (req, res) => {
     });
     res.send(returnObject);
   } catch (error) {
+    console.log(error)
     let returnObject = ResponseObject.create({
       code: 400,
       success: false,
@@ -102,7 +105,7 @@ const getWishlist = async (req, res) => {
   try {
     const getProduct = await Wishlist.find();
     const WishlistProduct = getProduct.filter(
-      (wishlist) => wishlist.userID.toString() === userId
+      (wishlist) => wishlist?.userID?.toString() === userId
     );
     console.log(WishlistProduct);
     console.log(getProduct);

@@ -4,8 +4,8 @@ const wishlistSchema = new mongoose.Schema({
   productId: { type: String},
   productName: { type: String  },
   productPrice: { type: String  },
-  // userID: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
 });
 
-export default mongoose.model("Wishlist", wishlistSchema);
+export default mongoose.model("Wishlistdetails", wishlistSchema);
 
