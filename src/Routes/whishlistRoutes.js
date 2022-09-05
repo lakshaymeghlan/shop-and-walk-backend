@@ -9,6 +9,6 @@ const router = express.Router();
 router.post("/create",validationMiddleware,wishlistCtrl.createWishlist);
 router.delete("/delete/:id",validationMiddleware,wishlistCtrl.deleteWishlist);
 router.get("/allWishlistProduct",validationMiddleware,wishlistCtrl.allWishlistProduct)
-router.get("/wishlist/:id",validationMiddleware,wishlistCtrl.getWishlist);
+router.get("/wishlist/:userEmail",validationMiddleware,wishlistCtrl.getWishlist);
 
 export default router;

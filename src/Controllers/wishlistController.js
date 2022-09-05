@@ -30,6 +30,7 @@ const createWishlist = async (req, res) => {
       productName: data.name,
       productPrice: data.price,
       userID: data.userId,
+      userEmail:data.userEmail
     });
     wishlist.save();
     let returnObject = ResponseObject.create({
@@ -101,13 +102,13 @@ const allWishlistProduct = async (req, res) => {
 };
 
 const getWishlist = async (req, res) => {
-  const { id: userId } = req.params;
+  const { userEmail:userEmail } = req.params;
   try {
-    const getProduct = await Wishlist.find();
-    const WishlistProduct = getProduct.filter(
-      (wishlist) => wishlist?.userID?.toString() === userId
-    );
-    console.log(WishlistProduct);
+    const getProduct = await Wishlist.find({userEmail:{$in:userEmail}});
+    // const WishlistProduct = getProduct.filter(
+    //   (wishlist) => wishlist?.userID?.toString() === userEmail
+    // );
+    // console.log(WishlistProduct);
     console.log(getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
