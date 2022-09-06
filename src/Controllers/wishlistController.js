@@ -9,12 +9,12 @@ const ResponseObject = new responseObjectClass();
 //create
 const createWishlist = async (req, res) => {
   try {
-    const data = req.body;
+    const { name, price, userId } = req.body;
     // const data = JSON.stringify(incomingData);
-    console.log('incoming product'+(data));
+    console.log("incoming product" + name);
 
     const existedProduct = await Wishlist.findOne({
-      $and: [{productName:data.name}, {userId: data.userId} ]
+      $and: [{ 'products.productName': name }, { userId: userId }],
     });
     if (existedProduct) {
       let returnObject = ResponseObject.create({
@@ -22,26 +22,28 @@ const createWishlist = async (req, res) => {
         success: false,
         message: "product already exist in wishlist",
       });
-      
+
       return res.send(returnObject);
     }
 
     const wishlist = await Wishlist.create({
-      productName: data.name,
-      productPrice: data.price,
-      userID: data.userId,
-      userEmail:data.userEmail
+      products: [{ productName: name, productPrice: price }],
+
+      userID: userId,
+      // userEmail:userEmail
     });
     wishlist.save();
+    // let newWishlist = new Wishlist({userId});
+    //   newWishlist = await newWishlist.save();
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
       message: "wishlist  is created",
-      data: wishlist,
+      data: wishlist
     });
     res.send(returnObject);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     let returnObject = ResponseObject.create({
       code: 400,
       success: false,
@@ -102,9 +104,9 @@ const allWishlistProduct = async (req, res) => {
 };
 
 const getWishlist = async (req, res) => {
-  const { userEmail:userEmail } = req.params;
+  const { userEmail: userEmail } = req.params;
   try {
-    const getProduct = await Wishlist.find({userEmail:{$in:userEmail}});
+    const getProduct = await Wishlist.find({ userEmail: { $in: userEmail } });
     // const WishlistProduct = getProduct.filter(
     //   (wishlist) => wishlist?.userID?.toString() === userEmail
     // );
