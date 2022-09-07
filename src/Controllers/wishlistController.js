@@ -14,7 +14,7 @@ const createWishlist = async (req, res) => {
     console.log("incoming product" + name);
 
     const existedProduct = await Wishlist.findOne({
-      $and: [{ 'products.productName': name }, { userId: userId }],
+      $and: [{ "products.productName": name }, { userId: userId }],
     });
     if (existedProduct) {
       let returnObject = ResponseObject.create({
@@ -25,21 +25,29 @@ const createWishlist = async (req, res) => {
 
       return res.send(returnObject);
     }
+    const existedWishlist = await Wishlist.findOne({ userID: userId });
+    console.log(existedWishlist._id);
 
-    const wishlist = await Wishlist.create({
-      products: [{ productName: name, productPrice: price }],
+    // const wishlist = await Wishlist.findByIdAndUpdate(existedWishlist._id, {
+    //   $push: {
+    //     // products: [{ productName: name, productPrice: price }],
+    //     "product.productName":name
+    //   },
+    // });
+    // wishlist.save();
 
-      userID: userId,
-      // userEmail:userEmail
+    const wishlist = await Wishlist.findOnebyIdAndUpdate(id, {
+      products: [
+        ...fetchedProcucts((e) => e._id !== needtochange._id),
+        newItem,
+      ],
     });
-    wishlist.save();
-    // let newWishlist = new Wishlist({userId});
-    //   newWishlist = await newWishlist.save();
+
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
       message: "wishlist  is created",
-      data: wishlist
+      data: wishlist,
     });
     res.send(returnObject);
   } catch (error) {

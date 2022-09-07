@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs";
 import _ from "lodash";
 import jwt from "jsonwebtoken";
+import Wishlistdetails from "../Schema/Wishlistdetails";
 
 //schema
 import UserSchema from "../Schema/userDetails";
@@ -28,6 +29,9 @@ const register = async (req, res) => {
       email,
       password: encryptedPassword,
     });
+     let newWishlist = new Wishlistdetails({userID:newUser._id});
+     console.log(newUser._id)
+      newWishlist = await newWishlist.save();
 
     console.log("new user created");
     return res.send({ status: "user created", newUser });
