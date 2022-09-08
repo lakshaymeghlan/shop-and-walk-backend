@@ -10,7 +10,6 @@ const ResponseObject = new responseObjectClass();
 const createWishlist = async (req, res) => {
   try {
     const { name, price, userId } = req.body;
-    // const data = JSON.stringify(incomingData);
     console.log("incoming product " + name);
 
     const existedProduct = await Wishlist.findOne({
@@ -27,14 +26,9 @@ const createWishlist = async (req, res) => {
     }
     const existedWishlist = await Wishlist.findOne({ userID: userId });
     console.log(existedWishlist._id);
-
     const wishlist = await Wishlist.findByIdAndUpdate(existedWishlist._id, {
       $push: {
         products: [{ productName: name, productPrice: price }],
-        // "products.productName":name
-
-        // products: productName
-        // "products":productName.name
       },
     });
     wishlist.save();

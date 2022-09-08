@@ -19,3 +19,7 @@ const productsSchema = new mongoose.Schema({
 });
 
 export default mongoose.model("products", productsSchema);
+
+
+
+// compare with product id

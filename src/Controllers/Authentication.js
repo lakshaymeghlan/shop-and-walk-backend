@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import _ from "lodash";
 import jwt from "jsonwebtoken";
 import Wishlistdetails from "../Schema/Wishlistdetails";
+import Cart from "../Schema/CartDetails";
 
 //schema
 import UserSchema from "../Schema/userDetails";
@@ -31,6 +32,9 @@ const register = async (req, res) => {
     });
     let newWishlist = new Wishlistdetails({ userID: newUser._id });
     newWishlist = await newWishlist.save();
+
+    let newCart = new Cart({ userID: newUser._id });
+    newCart = await newCart.save();
 
     console.log("new user created");
     return res.send({ status: "user created", newUser });

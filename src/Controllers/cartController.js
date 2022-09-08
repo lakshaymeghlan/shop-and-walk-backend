@@ -21,12 +21,20 @@ const addToCart = async (req, res) => {
       res.send(returnObject);
     }
 
-    const cart = await Cart.create({
-      productName: data.productName,
-      productPrice: data.productPrice,
-      // userID: data.userId,
-    });
-    cart.save();
+    const existedCart = await Cart.findOne({userID: userId});
+    console.log(existedCart);
+    const cart = await Cart.findByIdAndDelete(existedCart._id,{
+      $push:{
+        products:[{productName: name, productPrice:price}],
+      },
+    })
+
+    // const cart = await Cart.create({
+    //   productName: data.productName,
+    //   productPrice: data.productPrice,
+    //   // userID: data.userId,
+    // });
+    // cart.save();
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
@@ -128,3 +136,8 @@ const cartProduct = async (req, res) => {
 };
 
 export default { addToCart, deleteCart, AllCartProduct, cartProduct };
+
+
+
+
+//  
