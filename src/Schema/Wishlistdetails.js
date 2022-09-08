@@ -8,6 +8,7 @@ const wishlistSchema = new mongoose.Schema({
       productPrice: { type: String },
     },
   ],
+  // productName: [String] ,
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
   userEmail: { type: String },
 });

@@ -29,9 +29,8 @@ const register = async (req, res) => {
       email,
       password: encryptedPassword,
     });
-     let newWishlist = new Wishlistdetails({userID:newUser._id});
-     console.log(newUser._id)
-      newWishlist = await newWishlist.save();
+    let newWishlist = new Wishlistdetails({ userID: newUser._id });
+    newWishlist = await newWishlist.save();
 
     console.log("new user created");
     return res.send({ status: "user created", newUser });
