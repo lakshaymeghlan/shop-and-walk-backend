@@ -92,20 +92,20 @@ const deleteCart = async (req, res) => {
 
 // delete single product
 
-const deleteProduct = async (req,res) => {
+const deleteProduct = async (req, res) => {
   try {
     const cart = await Cart.findById(req.params.id);
-    if(cart){
-      const {products} = cart;
-      const productExist = products.find((product)=>{
-        return product._id.toString()=== req.params.productId;
+    if (cart) {
+      const { products } = cart;
+      const productExist = products.find((product) => {
+        return product._id.toString() === req.params.productId;
       });
-      if(productExist){
-        const remainingProduct = products.filter((product)=>{
+      if (productExist) {
+        const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
         });
-        const updateCart = await Cart.findOneAndUpdate(cart._id,{
-          $set: {products:remainingProduct},
+        const updateCart = await Cart.findOneAndUpdate(cart._id, {
+          $set: { products: remainingProduct },
         });
         console.log(updateCart);
         let returnObject = ResponseObject.create({
@@ -114,7 +114,7 @@ const deleteProduct = async (req,res) => {
           message: "product deleted ",
         });
         res.send(returnObject);
-      }else{
+      } else {
         let returnObject = ResponseObject.create({
           code: 400,
           success: true,
@@ -122,7 +122,7 @@ const deleteProduct = async (req,res) => {
         });
         res.send(returnObject);
       }
-    }else{
+    } else {
       let returnObject = ResponseObject.create({
         code: 400,
         success: true,
@@ -140,7 +140,6 @@ const deleteProduct = async (req,res) => {
     res.send(returnObject);
   }
 };
-
 
 //get
 
@@ -203,7 +202,6 @@ const cartProduct = async (req, res) => {
 
 //
 
-
 const addToCart = async (req, res) => {
   try {
     const { products, userId } = req.body;
@@ -212,13 +210,16 @@ const addToCart = async (req, res) => {
       userID: userId,
     });
     if (existedCart) {
+      console.log(existedCart);
       const existedProduct = await Cart.findOne({
         $and: [
           { "products.productName": products[0].productName },
           { userID: userId },
+          { "products.sellerId": products[0].sellerId },
         ],
       });
       if (existedProduct) {
+        console.log(existedProduct)
         let returnObject = ResponseObject.create({
           code: 400,
           success: false,
@@ -226,12 +227,13 @@ const addToCart = async (req, res) => {
         });
         return res.send(returnObject);
       } else {
-        const cart = await Cart.findByIdAndDelete(existedCart._id, {
-          $push: {
+        const cart = await Cart.findByIdAndUpdate(existedCart._id, {
+       $push: {
             products: [
               {
                 productName: products[0].productName,
                 productPrice: products[0].productPrice,
+                sellerId: products[0].sellerId,
               },
             ],
           },
@@ -258,4 +260,10 @@ const addToCart = async (req, res) => {
   }
 };
 
-export default { addToCart, deleteCart,deleteProduct, AllCartProduct, cartProduct };
+export default {
+  addToCart,
+  deleteCart,
+  deleteProduct,
+  AllCartProduct,
+  cartProduct,
+};

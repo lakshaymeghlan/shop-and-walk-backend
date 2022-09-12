@@ -1,7 +1,5 @@
 import Wishlist from "../Schema/Wishlistdetails";
 import _ from "lodash";
-// var Joi = require('joi')
-// import Joi from "joi";
 import responseObjectClass from "../helper/responseObjectClass";
 
 const ResponseObject = new responseObjectClass();
