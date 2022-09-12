@@ -92,7 +92,54 @@ const deleteCart = async (req, res) => {
 
 // delete single product
 
-
+const deleteProduct = async (req,res) => {
+  try {
+    const cart = await Cart.findById(req.params.id);
+    if(cart){
+      const {products} = cart;
+      const productExist = products.find((product)=>{
+        return product._id.toString()=== req.params.productId;
+      });
+      if(productExist){
+        const remainingProduct = products.filter((product)=>{
+          return product._id != productExist._id;
+        });
+        const updateCart = await Cart.findOneAndUpdate(cart._id,{
+          $set: {products:remainingProduct},
+        });
+        console.log(updateCart);
+        let returnObject = ResponseObject.create({
+          code: 200,
+          success: true,
+          message: "product deleted ",
+        });
+        res.send(returnObject);
+      }else{
+        let returnObject = ResponseObject.create({
+          code: 400,
+          success: true,
+          message: "product doesn't exist ",
+        });
+        res.send(returnObject);
+      }
+    }else{
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: true,
+        message: "wishlist doesn't exist",
+      });
+      res.send(returnObject);
+    }
+  } catch (error) {
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "item not deleted ",
+      data: error,
+    });
+    res.send(returnObject);
+  }
+};
 
 
 //get
@@ -118,6 +165,7 @@ const AllCartProduct = async (req, res) => {
   }
 };
 
+//get particular product
 const cartProduct = async (req, res) => {
   const { id: userId } = req.params;
   try {
@@ -210,4 +258,4 @@ const addToCart = async (req, res) => {
   }
 };
 
-export default { addToCart, deleteCart, AllCartProduct, cartProduct };
+export default { addToCart, deleteCart,deleteProduct, AllCartProduct, cartProduct };

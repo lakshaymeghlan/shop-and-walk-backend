@@ -160,6 +160,7 @@ const allWishlistProduct = async (req, res) => {
   }
 };
 
+//get particular product
 const getWishlist = async (req, res) => {
   const { userId } = req.params;
   try {
