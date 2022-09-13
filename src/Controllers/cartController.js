@@ -5,64 +5,63 @@ import responseObjectClass from "../helper/responseObjectClass";
 const ResponseObject = new responseObjectClass();
 
 // add to cart
-// const addToCart = async (req, res) => {
-//   try {
-//     const { products, userId } = req.body;
-//     console.log("incoming product " + products[0].productName);
-//     const existedProduct = await Cart.findOne({
-//       userID: userId,
-//     });
-//     if (existedProduct) {
-//       const existedProduct = await cart.findOne({
-//         $and: [
-//           { "products.productName": products[0].productName },
-//           { userID: userId },
-//         ],
-//       });
-//       let returnObject = ResponseObject.create({
-//         code: 400,
-//         success: false,
-//         message: "product already exist in cart",
-//       });
-//       res.send(returnObject);
-//     }
-
-//     const existedCart = await Cart.findOne({ userID: userId });
-//     console.log(existedCart);
-//     const cart = await Cart.findByIdAndDelete(existedCart._id, {
-//       $push: {
-//         products: [
-//           {
-//             productName: products.productName,
-//             productPrice: products.productPrice,
-//           },
-//         ],
-//       },
-//     });
-
-//     // const cart = await Cart.create({
-//     //   productName: data.productName,
-//     //   productPrice: data.productPrice,
-//     //   // userID: data.userId,
-//     // });
-//     // cart.save();
-//     let returnObject = ResponseObject.create({
-//       code: 200,
-//       success: true,
-//       message: "added to cart ",
-//       data: cart,
-//     });
-//     res.send(returnObject);
-//   } catch (error) {
-//     let returnObject = ResponseObject.create({
-//       code: 400,
-//       success: false,
-//       message: "not added to the cart ",
-//       data: error,
-//     });
-//     res.send(returnObject);
-//   }
-// };
+const addToCart = async (req, res) => {
+  try {
+    const { products, userId } = req.body;
+    console.log("incoming product " + products[0].productName);
+    const existedCart = await Cart.findOne({
+      userID: userId,
+    });
+    if (existedCart) {
+      console.log(existedCart);
+      const existedProduct = await Cart.findOne({
+        $and: [
+          { "products.productName": products[0].productName },
+          { userID: userId },
+          { "products.sellerId": products[0].sellerId },
+        ],
+      });
+      if (existedProduct) {
+        console.log(existedProduct);
+        let returnObject = ResponseObject.create({
+          code: 400,
+          success: false,
+          message: "product already exist in cart",
+        });
+        return res.send(returnObject);
+      } else {
+        const cart = await Cart.findByIdAndUpdate(existedCart._id, {
+          $push: {
+            products: [
+              {
+                productName: products[0].productName,
+                productPrice: products[0].productPrice,
+                sellerId: products[0].sellerId,
+              },
+            ],
+          },
+        });
+        cart.save();
+        let returnObject = ResponseObject.create({
+          code: 200,
+          success: true,
+          message: "added to cart ",
+          data: cart,
+        });
+        res.send(returnObject);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    let returnObject = ResponseObject.create({
+      code: 400,
+      success: false,
+      message: "not added to the cart ",
+      data: error,
+    });
+    res.send(returnObject);
+  }
+};
 
 //delete cart
 
@@ -126,7 +125,7 @@ const deleteProduct = async (req, res) => {
       let returnObject = ResponseObject.create({
         code: 400,
         success: true,
-        message: "wishlist doesn't exist",
+        message: "product doesn't exist",
       });
       res.send(returnObject);
     }
@@ -166,15 +165,15 @@ const AllCartProduct = async (req, res) => {
 
 //get particular product
 const cartProduct = async (req, res) => {
-  const { id: userId } = req.params;
+  const { userId } = req.params;
   try {
-    const getProduct = await Cart.find();
+    const getProduct = await Cart.find({ userID: { $in: userId } });
     // const CartProduct = getProduct.filter(
     //   (cart) => console.log(cart)
 
     // );
     // console.log(CartProduct);
-    // console.log(getProduct);
+    console.log(getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
         code: 200,
@@ -183,80 +182,17 @@ const cartProduct = async (req, res) => {
         data: getProduct,
       });
       res.send(returnObject);
-    }
-    // } else {
-    //   res.send({ getProduct: "no result found" });
-    // }
-  } catch (error) {
-    let returnObject = ResponseObject.create({
-      code: 400,
-      success: false,
-      message: "no result found",
-      data: error,
-    });
-    res.send(returnObject);
-  }
-};
-
-// export default { addToCart, deleteCart, AllCartProduct, cartProduct };
-
-//
-
-const addToCart = async (req, res) => {
-  try {
-    const { products, userId } = req.body;
-    console.log("incoming product " + products[0].productName);
-    const existedCart = await Cart.findOne({
-      userID: userId,
-    });
-    if (existedCart) {
-      console.log(existedCart);
-      const existedProduct = await Cart.findOne({
-        $and: [
-          { "products.productName": products[0].productName },
-          { userID: userId },
-          { "products.sellerId": products[0].sellerId },
-        ],
+    } else {
+      let returnObject = ResponseObject.create({
+        code: 400,
+        success: false,
+        message: "no result found",
+        data: error,
       });
-      if (existedProduct) {
-        console.log(existedProduct)
-        let returnObject = ResponseObject.create({
-          code: 400,
-          success: false,
-          message: "product already exist in cart",
-        });
-        return res.send(returnObject);
-      } else {
-        const cart = await Cart.findByIdAndUpdate(existedCart._id, {
-       $push: {
-            products: [
-              {
-                productName: products[0].productName,
-                productPrice: products[0].productPrice,
-                sellerId: products[0].sellerId,
-              },
-            ],
-          },
-        });
-        cart.save();
-        let returnObject = ResponseObject.create({
-          code: 200,
-          success: true,
-          message: "added to cart ",
-          data: cart,
-        });
-        res.send(returnObject);
-      }
+      res.send(returnObject);
     }
   } catch (error) {
     console.log(error);
-    let returnObject = ResponseObject.create({
-      code: 400,
-      success: false,
-      message: "not added to the cart ",
-      data: error,
-    });
-    res.send(returnObject);
   }
 };
 
