@@ -111,6 +111,7 @@ const deleteProduct = async (req, res) => {
           code: 200,
           success: true,
           message: "product deleted ",
+          data:updateCart,
         });
         res.send(returnObject);
       } else {
@@ -125,7 +126,7 @@ const deleteProduct = async (req, res) => {
       let returnObject = ResponseObject.create({
         code: 400,
         success: true,
-        message: "product doesn't exist",
+        message: "cart doesn't exist",
       });
       res.send(returnObject);
     }
