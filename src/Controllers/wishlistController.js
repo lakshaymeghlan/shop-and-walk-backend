@@ -9,6 +9,7 @@ const createWishlist = async (req, res) => {
   try {
     const { products, userId } = req.body;
     console.log("incoming product " + products[0].productName);
+    // console.log(products[0])
 
     const existedWishlist = await Wishlist.findOne({ userID: userId });
     if (existedWishlist) {
@@ -98,9 +99,9 @@ const deleteProduct = async (req, res) => {
       if (productExist) {
         const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
-        });
+        });       
         const updateWishlist = await Wishlist.findOneAndUpdate(wishlist._id, {
-          $set: { products: remainingProduct },
+          "$set": { "products": remainingProduct },
         });
         console.log(updateWishlist);
         let returnObject = ResponseObject.create({
@@ -163,10 +164,6 @@ const getWishlist = async (req, res) => {
   const { userId } = req.params;
   try {
     const getProduct = await Wishlist.find({ userID: { $in: userId } });
-    // const WishlistProduct = getProduct.filter(
-    //   (wishlist) => wishlist?.userID?.toString() === userEmail
-    // );
-    // console.log(WishlistProduct);
     console.log(getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
@@ -199,6 +196,9 @@ const getWishlist = async (req, res) => {
 //   }
 // });
 
+
+
+
 export default {
   createWishlist,
   deleteWishlist,
@@ -206,3 +206,9 @@ export default {
   getWishlist,
   deleteProduct,
 };
+
+
+
+
+// select particular product (more than one product in cart and wishlist) and delete them with one api
+// 

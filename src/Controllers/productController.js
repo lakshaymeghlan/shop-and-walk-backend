@@ -147,3 +147,6 @@ const update = async (req, res) => {
 };
 
 export default { add, deleteProduct, get, getProduct, update };
+
+
+
