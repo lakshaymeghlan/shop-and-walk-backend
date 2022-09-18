@@ -169,11 +169,6 @@ const cartProduct = async (req, res) => {
   const { userId } = req.params;
   try {
     const getProduct = await Cart.find({ userID: { $in: userId } });
-    // const CartProduct = getProduct.filter(
-    //   (cart) => console.log(cart)
-
-    // );
-    // console.log(CartProduct);
     console.log(getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
