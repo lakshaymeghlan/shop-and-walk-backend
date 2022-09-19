@@ -13,6 +13,10 @@ const productsSchema = new mongoose.Schema({
       productDesc: {
         type: String,
       },
+      img: {
+        data: Buffer,
+        contentType: String,
+      },
     },
   ],
  
