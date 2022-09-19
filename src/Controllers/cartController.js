@@ -1,6 +1,7 @@
 import Cart from "../Schema/CartDetails";
 import _ from "lodash";
 import responseObjectClass from "../helper/responseObjectClass";
+// import mongoose from "mongoose";
 
 const ResponseObject = new responseObjectClass();
 
@@ -192,10 +193,32 @@ const cartProduct = async (req, res) => {
   }
 };
 
+// update quantity
+//  const updateQuantity = async(req,res)=>{
+//   const {id:_id} = req.params;
+//   const quantity = req.body;
+//   const number = parseInt(quantity.quantity);
+
+//   if(!mongoose.Types.ObjectId.isValid(_id)){
+//     return res.status(404).send("product unavailable...");
+//   }
+//   try {
+//     await Cart.findByIdAndUpdate(_id,{$set:{quantity:number}});
+//     res.status(200).json({message:"successfully updated"});
+//     console.log(Cart)
+//   } catch (error) {
+//     console.log(error)
+//   }
+//  }
+
+
+
+
 export default {
   addToCart,
   deleteCart,
   deleteProduct,
   AllCartProduct,
   cartProduct,
+  // updateQuantity
 };

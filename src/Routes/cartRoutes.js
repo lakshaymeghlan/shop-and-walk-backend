@@ -10,5 +10,6 @@ router.delete("/delete/:id/product/:productId",validationMiddleware,cartCtrl.del
 router.delete("/delete/:id",validationMiddleware, cartCtrl.deleteCart);
 router.get("/cartProduct/:userId",validationMiddleware, cartCtrl.cartProduct);
 router.get("/AllCartProduct",validationMiddleware, cartCtrl.AllCartProduct);
+// router.patch("/updateQuantity/:id/products/:productId",validationMiddleware, cartCtrl.updateQuantity)
 
 export default router;

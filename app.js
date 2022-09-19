@@ -4,11 +4,13 @@ const app = express();
 import mongoose from "mongoose";
 import cors from "cors";
 
+
 //helpers
 import authenticationRoutes from "./src/Routes/authenticationRoutes";
 import productRoutes from "./src/Routes/productRoutes";
 import cartRoutes from "./src/Routes/cartRoutes";
 import whishlistRoutes from "./src/Routes/whishlistRoutes";
+import imageRoutes from "./src/Routes/imageRoutes";
 
 //constants
 const PORT = 8080;
@@ -32,6 +34,7 @@ app.use("/auth", authenticationRoutes);
 app.use("/product", productRoutes);
 app.use("/cart", cartRoutes);
 app.use("/wishlist", whishlistRoutes);
+app.use("/image",imageRoutes)
 
 //server
 app.listen(PORT, () => {
