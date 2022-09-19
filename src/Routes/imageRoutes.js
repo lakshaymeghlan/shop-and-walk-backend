@@ -20,6 +20,6 @@ const router = express.Router();
 
 
 
-router.post("/postImage/:id",upload.single('image'),imageCtrl.uploadImage);
+router.post("/uploadImage",upload.single('image'),imageCtrl.uploadImage);
 
 export default router;
