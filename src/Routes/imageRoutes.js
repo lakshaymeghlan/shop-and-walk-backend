@@ -1,9 +1,9 @@
 import express  from "express";
-import { postImage } from "../Controllers/imageController";
+import { postImage,getImage } from "../Controllers/imageController";
 import multer from "multer";
 import path from "path";
-import { postImage } from "../Controllers/imageController";
 const router = express.Router();
+const app = express();
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     },
 });
 var upload = multer({storage:storage});
-app.get("/",(Req,res)=>{
+app.get("/",(req,res)=>{
     res.sendFile(_dirname + "/index.html");
 });
 
