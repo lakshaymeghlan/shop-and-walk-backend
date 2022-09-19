@@ -1,36 +1,22 @@
 import user from '../Schema/userDetails'
-import sharp from "sharp";
-import path from "path";
-import fs from "fs";
+
 
 export const postImage = async (req, res) => {
+    console.log(req.file)
+
   const { id: _id } = req.params;
-  const { filename: image } = req.file;
 
-  await sharp(req.file.path)
-    .resize(200, 200)
-    .jpeg({ quality: 90 })
-    .toFile(path.resolve(req.file.destination, "resized", image));
-  fs.unlinkSync(req.file.path);
 
-  var obj = {
-    profilePicture: {
-      data: fs.readFileSync(
-        path.join(req.file.destination + "/resized/" + req.file.filename)
-      ),
-      contentType: req.file.mimetype,
-    },
-    userId: _id,
+  var img = {
+    data: req.file.buffer,
+    contentType: req.file.mimetype,
   };
-  user.findByIdAndUpdate(_id, obj, (err, item) => {
-    if (err) {
-      console.log(err);
-    } else {
-      item.save();
-      res.redirect("/");
-    }
-  });
+  res.json(img)
+//products.findbyidandupdate
+// save buffer data in products
+
 };
+
 
 
 export const getImage = async (req, res) => {
