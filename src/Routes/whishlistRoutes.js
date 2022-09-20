@@ -7,6 +7,7 @@ import { validationMiddleware } from "../helper/validation";
 const router = express.Router();
 
 router.post("/create",validationMiddleware,wishlistCtrl.createWishlist);
+// TODO @lakshay read it from req.query
 router.delete("/delete/:id/products/:productId",validationMiddleware,wishlistCtrl.deleteProduct);
 router.delete("/delete/:id",validationMiddleware,wishlistCtrl.deleteWishlist);
 router.get("/allWishlistProduct",validationMiddleware,wishlistCtrl.allWishlistProduct)

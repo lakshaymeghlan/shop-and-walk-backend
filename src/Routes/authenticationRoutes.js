@@ -17,6 +17,7 @@ const router = express.Router();
 
 router.post("/register", authCtrl.register);
 
+// TODO @lskshay move controller to controller file
 router.post("/login-user", async (req, res) => {
   const { email, password } = req.body;
 

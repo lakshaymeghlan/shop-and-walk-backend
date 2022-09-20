@@ -12,8 +12,6 @@ export const postImage = async (req, res) => {
     contentType: req.file.mimetype,
   };
   res.json(img)
-//products.findbyidandupdate
-// save buffer data in products
 
 };
 
