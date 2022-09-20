@@ -1,7 +1,6 @@
 import express  from "express";
 import { postImage,getImage } from "../Controllers/imageController";
 import multer from "multer";
-import path from "path";
 const router = express.Router();
 const app = express();
 

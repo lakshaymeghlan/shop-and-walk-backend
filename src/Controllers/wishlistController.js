@@ -99,9 +99,9 @@ const deleteProduct = async (req, res) => {
       if (productExist) {
         const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
-        });       
+        });
         const updateWishlist = await Wishlist.findOneAndUpdate(wishlist._id, {
-          "$set": { "products": remainingProduct },
+          $set: { products: remainingProduct },
         });
         console.log(updateWishlist);
         let returnObject = ResponseObject.create({
