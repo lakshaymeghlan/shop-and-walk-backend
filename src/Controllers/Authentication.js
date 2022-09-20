@@ -13,7 +13,7 @@ const JWT_SECRET =
 
   // TODO @lakshay  fix the format of all responses
 const register = async (req, res) => {
-  const { fname, lname, email, password } = req.body;
+  const { name,  email, password } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
   console.log("encrypted Password", encryptedPassword);
@@ -26,8 +26,7 @@ const register = async (req, res) => {
     }
     console.log("existing user not found creating new");
     const newUser = await UserSchema.create({
-      fname,
-      lname,
+      name,
       email,
       password: encryptedPassword,
     });
@@ -68,8 +67,9 @@ const login = async (req, res) => {
 const getUser = async (req, res) => {
   const { token } = req.body;
   try {
+    console.log("token-------------->", token)
     const user = jwt.verify(token, JWT_SECRET);
-    // console.log(user);
+    console.log("user-------------------->", user);
 
     const useremail = user.email;
     UserSchema.findOne({ email: useremail })
@@ -79,7 +79,7 @@ const getUser = async (req, res) => {
       .catch((error) => {
         res.send({ status: "error", data: error });
       });
-  } catch (error) {}
+  } catch (error) {console.log(error)}
 };
 
 export default { register, login, getUser };
