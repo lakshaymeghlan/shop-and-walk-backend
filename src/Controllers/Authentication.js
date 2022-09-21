@@ -4,9 +4,6 @@ import _ from "lodash";
 import jwt from "jsonwebtoken";
 import Wishlistdetails from "../Schema/Wishlistdetails";
 import Cart from "../Schema/CartDetails";
-import responseObjectClass from "../helper/responseObjectClass";
-
-const ResponseObject = new responseObjectClass();
 
 //schema
 import UserSchema from "../Schema/userDetails";
@@ -14,8 +11,9 @@ import UserSchema from "../Schema/userDetails";
 const JWT_SECRET =
   "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
 
+  // TODO @lakshay  fix the format of all responses
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name,  email, password } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
   console.log("encrypted Password", encryptedPassword);
@@ -39,21 +37,14 @@ const register = async (req, res) => {
     newCart = await newCart.save();
 
     console.log("new user created");
-    let returnObject = ResponseObject.create({
-      code: 200,
-      success: true,
-      message: "user created",
-      data: newUser,
-    });
-    res.send(returnObject);
-    // return res.send({ status: "user created", newUser });
+    return res.send({ status: "user created", newUser });
   } catch (error) {
     console.log("error found while creating a new user", error);
     return res.send({ status: "error", error: error });
   }
 };
 
-// TODO @lakshay  fix the format of all responses
+  // TODO @lakshay  fix the format of all responses
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -65,14 +56,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
     if (res.status(201)) {
-      let returnObject = ResponseObject.create({
-        code: 200,
-        success: true,
-        message: "login successfully",
-        data: token,
-      });
-      res.send(returnObject);
-      // return res.json({ status: "ok", data: token });
+      return res.json({ status: "ok", data: token });
     } else {
       return res.json({ error: "error" });
     }
@@ -81,10 +65,11 @@ const login = async (req, res) => {
 };
 
 
+
 const getUser = async (req, res) => {
   const { token } = req.body;
   try {
-    console.log("token-------------->", token);
+    console.log("token-------------->", token)
     const user = jwt.verify(token, JWT_SECRET);
     console.log("user-------------------->", user);
 
@@ -96,9 +81,7 @@ const getUser = async (req, res) => {
       .catch((error) => {
         res.send({ status: "error", data: error });
       });
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {console.log(error)}
 };
 
 export default { register, login, getUser };
