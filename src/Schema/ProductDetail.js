@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const productsSchema = new mongoose.Schema({
-  productDetails:[
-    {
+  // productDetails:[
+    // {
       productId: { type: String },
       productName: {
         type: String,
@@ -14,11 +14,11 @@ const productsSchema = new mongoose.Schema({
         type: String,
       },
       img: {
-        data: Buffer,
-        contentType: String,
+        type: String,
+        default:''
       },
-    },
-  ],
+    // },
+  // ],
  
 });
 

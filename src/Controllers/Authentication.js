@@ -56,7 +56,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
     if (res.status(201)) {
-      return res.json({ status: "ok", data: token });
+      return res.json({ status: "ok", data: user, token:token });
     } else {
       return res.json({ error: "error" });
     }

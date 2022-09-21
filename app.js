@@ -12,6 +12,7 @@ import cartRoutes from "./src/Routes/cartRoutes";
 import whishlistRoutes from "./src/Routes/whishlistRoutes";
 import imageRoutes from "./src/Routes/imageRoutes";
 
+
 //constants
 const PORT = 8080;
 const MONGO_URL =
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth", authenticationRoutes);
 app.use("/product", productRoutes);
+app.use("/product_image",express.static("./uploads")) // it should redirection of our end point to the particular folder
 app.use("/cart", cartRoutes);
 app.use("/wishlist", whishlistRoutes);
 app.use("/image",imageRoutes)

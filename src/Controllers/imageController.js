@@ -6,14 +6,16 @@ export const postImage = async (req, res) => {
 
   const { id: _id } = req.params;
 
-
   var img = {
-    data: req.file.buffer,
+    data: req.file.buffer, 
     contentType: req.file.mimetype,
   };
+
   res.json(img)
 
-};
+};    
+
+
 
 
 

@@ -7,17 +7,26 @@ const ResponseObject = new responseObjectClass();
 //create
 const createWishlist = async (req, res) => {
   try {
+    // userId: userId,
+    // userEmail: userEmail,
+    // products: [
+    //   {
+    //     id: product.productId,
+    //     productName: product.productName,
+    //     productPrice: product.productPrice,
+    //   },
+    // ],
     const { products, userId } = req.body;
     console.log("incoming product " + products[0].productName);
     // console.log(products[0])
 
-    const existedWishlist = await Wishlist.findOne({ userID: userId });
+    const existedWishlist = await Wishlist.findOne({ userID: req.body.userId });
     if (existedWishlist) {
       const existedProduct = await Wishlist.findOne({
         $and: [
           { "products.productName": products[0].productName },
-          { userID: userId },
-          { "products.sellerId": products[0].sellerId },
+          { userID: req.body.userId },
+          // { "products.sellerId": products[0].sellerId },
         ],
       });
       if (existedProduct) {
@@ -35,7 +44,7 @@ const createWishlist = async (req, res) => {
               {
                 productName: products[0].productName,
                 productPrice: products[0].productPrice,
-                sellerId: products[0].sellerId,
+                // sellerId: products[0].sellerId,
               },
             ],
           },

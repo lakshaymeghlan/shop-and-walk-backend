@@ -1,37 +1,54 @@
-import express from "express";
 import products from "../Schema/ProductDetail";
 import _ from "lodash";
 // const router = express.Router();
 import responseObjectClass from "../helper/responseObjectClass";
+// const upload = require('../helper/helper')
+import upload from '../helper/helper'
+const URL = "http://localhost:8080/product_image/"
 
 const ResponseObject = new responseObjectClass();
 
 //add
 const add = async (req, res) => {
   try {
-    const data = req.body;
-    console.log(data);
-    const existedProduct = await products.findOne({
-      productName: data.productName,
-    });
-    if (existedProduct) {
-      let returnObject = ResponseObject.create({
-        code: 400,
-        success: false,
-        message: "product already exist",
+
+    
+    let image_upload = await upload(req,res,async function(){
+      // console.log(req.body.productName)
+      const existedProduct = await products.findOne({
+        productName: req.body.productName,
       });
-      res.send(returnObject);
-    }
-    let product = new products(data);
+      
+      // console.log(existedProduct)
+      if (existedProduct) {
+        let returnObject = ResponseObject.create({
+          code: 400,
+          success: false,
+          message: "product already exist",
+        });
+        return res.send(returnObject);
+      }
+      let data = {
+        productName: req.body.productName,
+        productPrice: req.body.productPrice,
+        productDesc: req.body.productDesc,
+        img: `${URL}${req.file.filename}`,
+      }
+      
+      console.log(data)
+      let product =await products.create(data)
+      // let product = new products(data);
     console.log(product);
-    await product.save();
+    // await product.save();
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
       message: "product added successfully",
       data: product,
     });
-    res.send(returnObject);
+    return res.send(returnObject);
+    })
+    
   } catch (error) {
     console.log(error);
     let returnObject = ResponseObject.create({
