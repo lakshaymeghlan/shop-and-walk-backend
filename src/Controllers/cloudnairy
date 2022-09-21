@@ -1,0 +1,12 @@
+import cloudinary from "cloudinary";
+
+export const uploadToCloudinary = async (req, res) => {
+  try {
+    const fileStr = req.body.data;
+    const uploadedResponse = await cloudinary.v2.uploader.upload(fileStr);
+    console.log(uploadedResponse);
+    res.status(200).json({ message: "Uploaded" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
