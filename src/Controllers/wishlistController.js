@@ -100,6 +100,8 @@ const deleteWishlist = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const wishlist = await Wishlist.findById(req.params.id);
+    // console.log(wishlist)
+    // return;
     if (wishlist) {
       const { products } = wishlist;
       const productExist = products.find((product) => {
@@ -109,9 +111,11 @@ const deleteProduct = async (req, res) => {
         const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
         });
-        const updateWishlist = await Wishlist.findOneAndUpdate(wishlist._id, {
-          $set: { products: remainingProduct },
-        });
+        console.log(remainingProduct);
+        const updateWishlist = await Wishlist.updateOne({_id:wishlist._id},{products: remainingProduct})
+        // const updateWishlist = await Wishlist.findOneAndUpdate(wishlist._id, {
+        //   $set: { products: remainingProduct },
+        // });
         console.log(updateWishlist);
         let returnObject = ResponseObject.create({
           code: 200,
@@ -146,7 +150,15 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-// get
+// const deleteSingleProduct = async (req,res)=>{
+//   try {
+//     const wishlist = await Wishlist.findById(req.params.id);
+//   } catch (error) {
+
+//   }
+// }
+
+// // get
 const allWishlistProduct = async (req, res) => {
   try {
     const getProduct = await Wishlist.find();
@@ -205,9 +217,6 @@ const getWishlist = async (req, res) => {
 //   }
 // });
 
-
-
-
 export default {
   createWishlist,
   deleteWishlist,
@@ -218,6 +227,8 @@ export default {
 
 
 
-
-// select particular product (more than one product in cart and wishlist) and delete them with one api
-// 
+// i have to pass id array within the body section 
+// from param i have to pass the wishlist id 
+// so end point appear
+// we can use filter
+//
