@@ -104,13 +104,13 @@ const deleteProduct = async (req, res) => {
         const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
         });
-        const updateCart = await Cart.findOneAndUpdate(cart._id, {
-          $set: { products: remainingProduct },
-        });
+        const updateCart = await Cart.updateOne({_id:cart._id}, {products: remainingProduct})
+        //   $set: { products: remainingProduct },
+        // });
         console.log(updateCart);
         let returnObject = ResponseObject.create({
           code: 200,
-          success: true,
+          success: true,    
           message: "product deleted ",
           data:updateCart,
         });
