@@ -1,7 +1,7 @@
 import Cart from "../Schema/CartDetails";
 import _ from "lodash";
 import responseObjectClass from "../helper/responseObjectClass";
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
 const ResponseObject = new responseObjectClass();
 
@@ -38,6 +38,7 @@ const addToCart = async (req, res) => {
                 productName: products[0].productName,
                 productPrice: products[0].productPrice,
                 sellerId: products[0].sellerId,
+                productQuantity: 1,
               },
             ],
           },
@@ -90,6 +91,32 @@ const deleteCart = async (req, res) => {
   }
 };
 
+// delete multiple product by checkbox
+
+// const deleteMultipleProduct = async (req, res) => {
+//   try {
+//     const deleteProduct = await Cart.findByIdAndDelete(req.params.id);
+//     if (!req.params.id) {
+//       res.status(200).send(results[0].id.toString());
+//     }
+//     let returnObject = ResponseObject.create({
+//       code: 200,
+//       success: true,
+//       message: "item deleted from the cart ",
+//       data: deleteProduct,
+//     });
+//     res.send(returnObject);
+//   } catch (error) {
+//     let returnObject = ResponseObject.create({
+//       code: 400,
+//       success: false,
+//       message: "item not deleted from the cart ",
+//       data: error,
+//     });
+//     res.send(returnObject);
+//   }
+// };
+
 // delete single product
 
 const deleteProduct = async (req, res) => {
@@ -104,15 +131,18 @@ const deleteProduct = async (req, res) => {
         const remainingProduct = products.filter((product) => {
           return product._id != productExist._id;
         });
-        const updateCart = await Cart.updateOne({_id:cart._id}, {products: remainingProduct})
+        const updateCart = await Cart.updateOne(
+          { _id: cart._id },
+          { products: remainingProduct }
+        );
         //   $set: { products: remainingProduct },
         // });
         console.log(updateCart);
         let returnObject = ResponseObject.create({
           code: 200,
-          success: true,    
+          success: true,
           message: "product deleted ",
-          data:updateCart,
+          data: updateCart,
         });
         res.send(returnObject);
       } else {
@@ -194,25 +224,31 @@ const cartProduct = async (req, res) => {
 };
 
 // update quantity
-//  const updateQuantity = async(req,res)=>{
-//   const {id:_id} = req.params;
-//   const quantity = req.body;
-//   const number = parseInt(quantity.quantity);
+const updateQuantity = async (req, res) => {
+  console.log("---------+++++--->", req.body);
+  console.log(req.params);
+  //const { _id } = req.body.products[0];
+  const quantity = req.body.productQuantity;
+  //console.log("quantity", quantity);
+  //const number = parseInt(quantity.productQuantity);
+  console.log(req.body);
 
-//   if(!mongoose.Types.ObjectId.isValid(_id)){
-//     return res.status(404).send("product unavailable...");
-//   }
-//   try {
-//     await Cart.findByIdAndUpdate(_id,{$set:{quantity:number}});
-//     res.status(200).json({message:"successfully updated"});
-//     console.log(Cart)
-//   } catch (error) {
-//     console.log(error)
-//   }
-//  }
-
-
-
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(404).send("product unavailable...");
+  }
+  try {
+    console.log(req.params.id);
+    const filter={_id:req.params.id};
+    const update={productQuantity:quantity};
+    
+    const cart = await Cart.updateOne({"_id":req.params.id,"products._id":req.params.productId},{$set:{"products.$.productQuantity":req.body.productQuantity}});
+    console.log("------------>", cart); 
+    res.status(200).json({ message: "successfully updated" });
+    console.log(Cart);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export default {
   addToCart,
@@ -220,5 +256,5 @@ export default {
   deleteProduct,
   AllCartProduct,
   cartProduct,
-  // updateQuantity
+  updateQuantity,
 };
