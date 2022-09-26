@@ -38,7 +38,7 @@ const addToCart = async (req, res) => {
                 productName: products[0].productName,
                 productPrice: products[0].productPrice,
                 sellerId: products[0].sellerId,
-                productQuantity: 1,
+                quantity: 1,
               },
             ],
           },
@@ -200,7 +200,7 @@ const cartProduct = async (req, res) => {
   const { userId } = req.params;
   try {
     const getProduct = await Cart.find({ userID: { $in: userId } });
-    console.log(getProduct);
+    console.log("------------>",getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
         code: 200,
@@ -239,9 +239,9 @@ const updateQuantity = async (req, res) => {
   try {
     console.log(req.params.id);
     const filter={_id:req.params.id};
-    const update={productQuantity:quantity};
+    const update={quantity:quantity};
     
-    const cart = await Cart.updateOne({"_id":req.params.id,"products._id":req.params.productId},{$set:{"products.$.productQuantity":req.body.productQuantity}});
+    const cart = await Cart.updateOne({"_id":req.params.id,"products._id":req.params.productId},{$set:{"products.$.quantity":req.body.quantity}});
     console.log("------------>", cart); 
     res.status(200).json({ message: "successfully updated" });
     console.log(Cart);
