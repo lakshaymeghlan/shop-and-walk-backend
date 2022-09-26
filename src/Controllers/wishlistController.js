@@ -1,5 +1,4 @@
 import Wishlist from "../Schema/Wishlistdetails";
-import _ from "lodash";
 import responseObjectClass from "../helper/responseObjectClass";
 
 const ResponseObject = new responseObjectClass();
@@ -98,35 +97,28 @@ const deleteWishlist = async (req, res) => {
 // delete multiple products
 
 const deleteMultipleProduct = async (req, res) => {
- // console.log(req.body.products[0]);
-  const products=req.body.products;
-  const pr=products.map((p)=>{
-    console.log(p._id);
-    const delteproduct=Wishlist.remove({
-      "_id":req.body.Id,
-      "products._id":p._id
-    })
-    // if(!delteproduct){
-    //   res.status(404).json({ message: "no product found" });
-    // }else{
-    //   res.send(delteproduct)
-    // }
+  try {
+    console.log(req.body.wishlistId);
+    // array of ids
+    let wishlist = await Wishlist.findOne({ userID: req.body.wishlistId });
+    console.log("--", wishlist);
 
-  })
-  // try {
-  //   console.log(req.body);
-  //   // console.log(req.body.userid);
-  //   // console.log(req.body.products);
-  //   const allid = req.body.products;
+    const productIdsToBeDeleted = new Set(req.body.products);
 
-  //   const deleteproducts = await allid.map((i) => {
-  //     const delp = Wishlist.findOneAndDelete({
-  //       _id: req.body.userId,
-  //       "products._id": i._id,
-  //     });
-  //     console.log(delp);
-  //   });
-  // } catch (err) {}
+    const newProductArray = wishlist.products.filter((product) => {
+      return !productIdsToBeDeleted.has(product.id);
+    });
+
+    console.log("---", newProductArray);
+
+    wishlist.products = newProductArray;
+
+    await wishlist.save();
+
+    res.json({ success: true, products: wishlist.products });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 //delete a single product
