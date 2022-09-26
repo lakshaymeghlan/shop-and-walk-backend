@@ -91,31 +91,32 @@ const deleteCart = async (req, res) => {
   }
 };
 
-// delete multiple product by checkbox
+// delete multiple products
 
-// const deleteMultipleProduct = async (req, res) => {
-//   try {
-//     const deleteProduct = await Cart.findByIdAndDelete(req.params.id);
-//     if (!req.params.id) {
-//       res.status(200).send(results[0].id.toString());
-//     }
-//     let returnObject = ResponseObject.create({
-//       code: 200,
-//       success: true,
-//       message: "item deleted from the cart ",
-//       data: deleteProduct,
-//     });
-//     res.send(returnObject);
-//   } catch (error) {
-//     let returnObject = ResponseObject.create({
-//       code: 400,
-//       success: false,
-//       message: "item not deleted from the cart ",
-//       data: error,
-//     });
-//     res.send(returnObject);
-//   }
-// };
+const deleteMultipleProduct = async (req, res) => {
+  try {
+    console.log(req.body.cartId);
+    // array of ids
+    let cart = await Cart.findOne({ userID: req.body.cartId });
+    console.log("--", cart);
+
+    const productIdsToBeDeleted = new Set(req.body.products);
+
+    const newProductArray = cart.products.filter((product) => {
+      return !productIdsToBeDeleted.has(product.id);
+    });
+
+    console.log("---", newProductArray);
+
+    cart.products = newProductArray;
+
+    await cart.save();
+
+    res.json({ success: true, products: cart.products });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 // delete single product
 
@@ -257,4 +258,5 @@ export default {
   AllCartProduct,
   cartProduct,
   updateQuantity,
+  deleteMultipleProduct
 };
