@@ -97,28 +97,39 @@ const deleteWishlist = async (req, res) => {
 
 // delete multiple products
 
-// const deleteMultipleProduct = async(req,res)=>{
-
-// }
-const deleteMultipleProduct=async(req,res)=>{
-  try{
-
-    console.log(req.body);
-    // console.log(req.body.userid);
-    // console.log(req.body.products);
-    const allid=req.body.products;
-
-    const deleteproducts= await allid.map((i)=>{
-      const delp= Wishlist.findOneAndDelete({"_id":req.body.userId,"products._id":i._id});
-      console.log(delp);
+const deleteMultipleProduct = async (req, res) => {
+ // console.log(req.body.products[0]);
+  const products=req.body.products;
+  const pr=products.map((p)=>{
+    console.log(p._id);
+    const delteproduct=Wishlist.remove({
+      "_id":req.body.Id,
+      "products._id":p._id
     })
-  }catch(err){
+    // if(!delteproduct){
+    //   res.status(404).json({ message: "no product found" });
+    // }else{
+    //   res.send(delteproduct)
+    // }
 
-  }
-}
+  })
+  // try {
+  //   console.log(req.body);
+  //   // console.log(req.body.userid);
+  //   // console.log(req.body.products);
+  //   const allid = req.body.products;
+
+  //   const deleteproducts = await allid.map((i) => {
+  //     const delp = Wishlist.findOneAndDelete({
+  //       _id: req.body.userId,
+  //       "products._id": i._id,
+  //     });
+  //     console.log(delp);
+  //   });
+  // } catch (err) {}
+};
 
 //delete a single product
-
 
 const deleteProduct = async (req, res) => {
   try {
@@ -135,7 +146,10 @@ const deleteProduct = async (req, res) => {
           return product._id != productExist._id;
         });
         console.log(remainingProduct);
-        const updateWishlist = await Wishlist.updateOne({_id:wishlist._id},{products: remainingProduct})
+        const updateWishlist = await Wishlist.updateOne(
+          { _id: wishlist._id },
+          { products: remainingProduct }
+        );
         // const updateWishlist = await Wishlist.findOneAndUpdate(wishlist._id, {
         //   $set: { products: remainingProduct },
         // });
@@ -246,13 +260,11 @@ export default {
   allWishlistProduct,
   getWishlist,
   deleteProduct,
-  deleteMultipleProduct
+  deleteMultipleProduct,
 };
 
-
-
-// i have to pass id array within the body section 
-// from param i have to pass the wishlist id 
+// i have to pass id array within the body section
+// from param i have to pass the wishlist id
 // so end point appear
 // we can use filter
 //
