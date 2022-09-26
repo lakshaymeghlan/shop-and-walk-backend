@@ -7,8 +7,9 @@ import wishlistCtrl from "../Controllers/wishlistController";
 const router = express.Router();
 
 router.post("/create",wishlistCtrl.createWishlist);
-// TODO @lakshay read it from req.query
 router.delete("/delete/:id/products/:productId",wishlistCtrl.deleteProduct);
+// router.delete("/delete/:id/products/:productId",wishlistCtrl.deleteMultipleProduct);
+router.delete("/deleteselected",wishlistCtrl.deleteMultipleProduct);
 router.delete("/delete/:id",wishlistCtrl.deleteWishlist);
 router.get("/allWishlistProduct",wishlistCtrl.allWishlistProduct)
 router.get("/:userId",wishlistCtrl.getWishlist);

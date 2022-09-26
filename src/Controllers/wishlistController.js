@@ -95,7 +95,30 @@ const deleteWishlist = async (req, res) => {
   }
 };
 
+// delete multiple products
+
+// const deleteMultipleProduct = async(req,res)=>{
+
+// }
+const deleteMultipleProduct=async(req,res)=>{
+  try{
+
+    console.log(req.body);
+    // console.log(req.body.userid);
+    // console.log(req.body.products);
+    const allid=req.body.products;
+
+    const deleteproducts= await allid.map((i)=>{
+      const delp= Wishlist.findOneAndDelete({"_id":req.body.userId,"products._id":i._id});
+      console.log(delp);
+    })
+  }catch(err){
+
+  }
+}
+
 //delete a single product
+
 
 const deleteProduct = async (req, res) => {
   try {
@@ -223,6 +246,7 @@ export default {
   allWishlistProduct,
   getWishlist,
   deleteProduct,
+  deleteMultipleProduct
 };
 
 
