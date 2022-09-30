@@ -74,7 +74,12 @@ const createWishlist = async (req, res) => {
 
 const deleteWishlist = async (req, res) => {
   try {
-    const deleteWishlist = await Wishlist.findByIdAndDelete(req.params.id);
+    const deleteWishlist = await Wishlist.findById(req.params.id);
+    console.log(deleteWishlist);
+
+    deleteWishlist.products = [];
+
+    await deleteWishlist.save();
 
     let returnObject = ResponseObject.create({
       code: 200,

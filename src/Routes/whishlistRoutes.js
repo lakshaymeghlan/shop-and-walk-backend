@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.post("/create",wishlistCtrl.createWishlist);
 router.delete("/delete/:id/products/:productId",wishlistCtrl.deleteProduct);
-// router.delete("/delete/:id/products/:productId",wishlistCtrl.deleteMultipleProduct);
 router.patch("/deleteselected",wishlistCtrl.deleteMultipleProduct);
 router.delete("/delete/:id",wishlistCtrl.deleteWishlist);
 router.get("/allWishlistProduct",wishlistCtrl.allWishlistProduct)

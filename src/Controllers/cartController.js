@@ -69,10 +69,12 @@ const addToCart = async (req, res) => {
 
 const deleteCart = async (req, res) => {
   try {
-    const deleteProduct = await Cart.findByIdAndDelete(req.params.id);
-    if (!req.params.id) {
-      res.status(200).send(results[0].id.toString());
-    }
+    const deleteCart = await Cart.findById(req.params.id);
+    console.log(deleteProduct)
+
+    deleteCart.products = [];
+    await deleteCart.save();
+     
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
