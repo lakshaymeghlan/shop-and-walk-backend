@@ -70,11 +70,11 @@ const addToCart = async (req, res) => {
 const deleteCart = async (req, res) => {
   try {
     const deleteCart = await Cart.findById(req.params.id);
-    console.log(deleteProduct)
+    console.log(deleteProduct);
 
     deleteCart.products = [];
     await deleteCart.save();
-     
+
     let returnObject = ResponseObject.create({
       code: 200,
       success: true,
@@ -203,7 +203,7 @@ const cartProduct = async (req, res) => {
   const { userId } = req.params;
   try {
     const getProduct = await Cart.find({ userID: { $in: userId } });
-    console.log("------------>",getProduct);
+    console.log("------------>", getProduct);
     if (getProduct) {
       let returnObject = ResponseObject.create({
         code: 200,
@@ -241,11 +241,14 @@ const updateQuantity = async (req, res) => {
   }
   try {
     console.log(req.params.id);
-    const filter={_id:req.params.id};
-    const update={quantity:quantity};
-    
-    const cart = await Cart.updateOne({"_id":req.params.id,"products._id":req.params.productId},{$set:{"products.$.quantity":req.body.quantity}});
-    console.log("------------>", cart); 
+    const filter = { _id: req.params.id };
+    const update = { quantity: quantity };
+
+    const cart = await Cart.updateOne(
+      { _id: req.params.id, "products._id": req.params.productId },
+      { $set: { "products.$.quantity": req.body.quantity } }
+    );
+    console.log("------------>", cart);
     res.status(200).json({ message: "successfully updated" });
     console.log(Cart);
   } catch (error) {
@@ -260,5 +263,5 @@ export default {
   AllCartProduct,
   cartProduct,
   updateQuantity,
-  deleteMultipleProduct
+  deleteMultipleProduct,
 };
