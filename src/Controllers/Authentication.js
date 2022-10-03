@@ -2,6 +2,8 @@
 import bcrypt from "bcryptjs";
 import _ from "lodash";
 import jwt from "jsonwebtoken";
+import Wishlistdetails from "../Schema/Wishlistdetails";
+import Cart from "../Schema/CartDetails";
 
 //schema
 import UserSchema from "../Schema/userDetails";
@@ -10,7 +12,7 @@ const JWT_SECRET =
   "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
 
 const register = async (req, res) => {
-  const { fname, lname, email, password } = req.body;
+  const { name,  email, password } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
   console.log("encrypted Password", encryptedPassword);
@@ -23,11 +25,15 @@ const register = async (req, res) => {
     }
     console.log("existing user not found creating new");
     const newUser = await UserSchema.create({
-      fname,
-      lname,
+      name,
       email,
       password: encryptedPassword,
     });
+    let newWishlist = new Wishlistdetails({ userID: newUser._id });
+    newWishlist = await newWishlist.save();
+
+    let newCart = new Cart({ userID: newUser._id });
+    newCart = await newCart.save();
 
     console.log("new user created");
     return res.send({ status: "user created", newUser });
@@ -48,7 +54,7 @@ const login = async (req, res) => {
     const token = jwt.sign({ email: user.email }, JWT_SECRET);
 
     if (res.status(201)) {
-      return res.json({ status: "ok", data: token });
+      return res.json({ status: "ok", data: token, user:user });
     } else {
       return res.json({ error: "error" });
     }
@@ -56,11 +62,14 @@ const login = async (req, res) => {
   res.json({ status: "error", error: "InvAlid Password" });
 };
 
+
+
 const getUser = async (req, res) => {
   const { token } = req.body;
   try {
+    console.log("token-------------->", token)
     const user = jwt.verify(token, JWT_SECRET);
-    // console.log(user);
+    console.log("user-------------------->", user);
 
     const useremail = user.email;
     UserSchema.findOne({ email: useremail })
@@ -70,7 +79,7 @@ const getUser = async (req, res) => {
       .catch((error) => {
         res.send({ status: "error", data: error });
       });
-  } catch (error) {}
+  } catch (error) {console.log(error)}
 };
 
 export default { register, login, getUser };
