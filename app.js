@@ -4,7 +4,6 @@ const app = express();
 import mongoose from "mongoose";
 import cors from "cors";
 
-
 //helpers
 import authenticationRoutes from "./src/Routes/authenticationRoutes";
 import productRoutes from "./src/Routes/productRoutes";
